@@ -1,5 +1,28 @@
+<?php
+$login = false;
+$showError = false;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    include 'components/_dbconnect.php';
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $sql = "SELECT * FROM users WHERE userid='$username' AND password='$password'";
+    $result = mysqli_query($conn, $sql);
+    $num = mysqli_num_rows($result);
+    if ($num == 1) {
+        $login = true;
+        session_start();
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $username;
+        header('location: studentDetails.php');
+    } else {
+        $showError = "Invalid Credentials";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,30 +66,32 @@
         }
     </style>
 </head>
+
 <body>
 
+    
     <div class="login-container">
         <div class="login-form shadow-lg p-4 rounded">
             <h2 class="form-title text-center">Login</h2>
-            <form id="loginForm" onsubmit="return validateForm()">
+            <form action="login.php" method="post" id="loginForm" onsubmit="return validateForm()">
                 <!-- Username Input -->
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
                     <div class="invalid-feedback">Username is required.</div>
                 </div>
 
                 <!-- Password Input -->
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter password" required>
                     <div class="invalid-feedback">Password is required.</div>
                 </div>
 
                 <!-- Login Button -->
                 <button type="submit" class="btn btn-primary form-button">Login</button>
             </form>
-            
+
             <div class="mt-3 text-center">
                 <p class="form-text">Don't have an account? <a href="#">Sign Up</a></p>
             </div>
@@ -103,4 +128,5 @@
     </script>
 
 </body>
+
 </html>

@@ -1,4 +1,11 @@
 <?php
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
+    header("location: login.php");
+    exit;
+}
+
+
 $showAlert = false;
 $showError = false;
 include 'components/_dbconnect.php';
@@ -65,13 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>';
     }
     ?>
-    <div class="container form-container">
+    <div class="container form-container mt-4">
         <h2 class="text-center">Student Details Form</h2>
 
         <!-- Dropdown to change form type -->
 
         <!-- Student Details Form -->
-        <form action="enteryForm1.php" method="post" id="enteryForm" class="row g-3">
+        <form action="enteryForm.php" method="post" id="enteryForm" class="row g-3">
 
             <div class="mb-3">
                 <label for="entery_type" class="form-label">Select Form Type</label>
@@ -151,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: Bootstrap Bundle with Popper -->
+     
     <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Option 2: Separate Popper and Bootstrap JS -->
