@@ -1,4 +1,11 @@
 <?php
+
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
+    header("location: index.php");
+    exit;
+}
+
 $showAlert = false;
 $showError = false;
 include 'components/_dbconnect.php';
@@ -17,15 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $existfield = "SELECT * FROM enquiry WHERE sname = '$sname' AND contact1 = '$mob1' AND contact2='$mob2'";
     $result = mysqli_query($conn, $existfield);
     $rowCount = mysqli_num_rows($result);
-    if($rowCount>0){
+    if ($rowCount > 0) {
         $showError = "Student Name and Mobile number are same like previous entery";
-    }else{
+    } else {
 
         $query = "INSERT INTO `enquiry`(`entery_type`,`sname`, `fname`, `contact1`, `contact2`, `ccategory`, `subject_stream`, `school_name`, `city`, `tehsil`, `Village`) VALUES ('$etype', '$sname','$fname','$mob1','$mob2','$ccat','$substr','$schoolname','$city','$tehsil','$village')";
         $result = mysqli_query($conn, $query);
         if ($result) {
             $showAlert = true;
-            header("location:enteryForm.php");
+            // header("location:enteryForm.php");
         } else {
             $showError = "Data Can't be insert";
         }
@@ -40,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Details Form</title>
     <!-- Bootstrap 5.0 CDN -->
-    <link href="bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .form-container {
             margin-top: 30px;
@@ -75,11 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h2 class="text-center">Student Details Form</h2>
 
         <!-- Dropdown to change form type -->
-        
+
         <!-- Student Details Form -->
-        <form action="enteryForm.php" method="post" id="enteryForm" class="row g-3">
-            
-        <div class="mb-3">
+        <form action="enteryForm.php" method="post" id="enteryForm" class="row g-2">
+
+            <div class="mb-3">
                 <label for="entery_type" class="form-label">Select Form Type</label>
                 <select name="entery_type" class="form-select" id="entery_type">
                     <option>Select</option>
@@ -155,36 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </form>
     </div>
-
-    <!-- JavaScript to switch between form types -->
-    <!-- <script>
-        function changeForm() {
-            const formType = document.getElementById("formType").value;
-            const studentForm = document.getElementById("studentForm");
-
-            if (formType === "enquire") {
-                // Show enquiry form specific adjustments here
-                studentForm.reset();
-                document.getElementById("studentName").setAttribute("required", false);
-                document.getElementById("fatherName").setAttribute("required", false);
-                document.getElementById("mobileNumber").setAttribute("required", false);
-                document.getElementById("subjectStream").setAttribute("required", false);
-                document.getElementById("schoolName").setAttribute("required", false);
-                document.getElementById("city").setAttribute("required", false);
-                document.getElementById("tehsil").setAttribute("required", false);
-            } else {
-                // Show registration form specific adjustments here
-                document.getElementById("studentName").setAttribute("required", true);
-                document.getElementById("fatherName").setAttribute("required", true);
-                document.getElementById("mobileNumber").setAttribute("required", true);
-                document.getElementById("subjectStream").setAttribute("required", true);
-                document.getElementById("schoolName").setAttribute("required", true);
-                document.getElementById("city").setAttribute("required", true);
-                document.getElementById("tehsil").setAttribute("required", true);
-            }
-        }
-    </script> -->
-    <script src="/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <script src="/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>

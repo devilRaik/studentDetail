@@ -9,12 +9,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = mysqli_query($conn, $sql);
     $num = mysqli_num_rows($result);
     if ($num == 1) {
-        $login = true;
-        session_start();
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        header('location: studentDetails.php');
+        $row = mysqli_fetch_array($result);
+        if ($row['userid'] == 'admin') {
+            $login = true;
+            session_start();
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $username;
+            header("location: admin.php");
+        } else {
+
+            $login = true;
+            session_start();
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $username;
+            header('location: enteryForm.php');
+        }
     } else {
+        session_start();
+        $_SESSION['message'] = 'This message will disappear in 5 seconds!';
+        $_SESSION['message_type'] = 'success';  // 'success', 'danger', etc.
         $showError = "Invalid Credentials";
     }
 }
@@ -68,12 +81,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
-
-    
+    <?php
+    if ($showError) {
+        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert" id="auto-hide-alert">' . $showError . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+    }
+    ?>
     <div class="login-container">
         <div class="login-form shadow-lg p-4 rounded">
             <h2 class="form-title text-center">Login</h2>
-            <form action="login.php" method="post" id="loginForm" onsubmit="return validateForm()">
+            <form action="index.php" method="post" id="loginForm" onsubmit="return validateForm()">
                 <!-- Username Input -->
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
@@ -126,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return isValid;
         }
     </script>
-
 </body>
 
 </html>
