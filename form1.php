@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($rowCount > 0) {
         $showError = "Student Name and Mobile number are same like previous entery";
     } else {
-        $query = "INSERT INTO `enquiry`(`entery_type`,`sname`, `fname`, `contact1`, `contact2`, `ccategory`, `subject_stream`, `school_name`, `city`, `tehsil`, `Village`) VALUES ('$etype', '$sname','$fname','$mob1','$mob2','$ccat','$substr','$schoolname','$city','$tehsil','$village')";
+        $query = "INSERT INTO `enquiry`(`entery_type`,`sname`, `fname`, `contact1`, `contact2`, `ccategory`, `subject_stream`,`state`, `city`, `school_name`) VALUES ('$etype', '$sname','$fname','$mob1','$mob2','$ccat','$substr', '$state','$city','$schoolname')";
         $result = mysqli_query($conn, $query);
         if ($result) {
             $showAlert = true;
