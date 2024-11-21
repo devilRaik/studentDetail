@@ -18,8 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $state = $_POST['state'];
     $city = $_POST['city'];
     $schoolname = $_POST['school_name'];
-    $tehsil = $_POST['tehsil'];
-    $village = $_POST['village'];
     $entry_mode = $_POST['entry_mode'];
 
     // State
@@ -38,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // School
     if ($entry_mode == 'select') {
-        $school = $_POST['school'];
+        $schoolname = $_POST['school'];
     } else {
-        $school = $_POST['manual_school'];
+        $schoolname = $_POST['manual_school'];
     }
 
     $existfield = "SELECT * FROM enquiry WHERE sname = '$sname' AND contact1 = '$mob1' AND contact2='$mob2'";
@@ -49,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($rowCount > 0) {
         $showError = "Student Name and Mobile number are same like previous entery";
     } else {
-
         $query = "INSERT INTO `enquiry`(`entery_type`,`sname`, `fname`, `contact1`, `contact2`, `ccategory`, `subject_stream`, `school_name`, `city`, `tehsil`, `Village`) VALUES ('$etype', '$sname','$fname','$mob1','$mob2','$ccat','$substr','$schoolname','$city','$tehsil','$village')";
         $result = mysqli_query($conn, $query);
         if ($result) {
@@ -75,6 +72,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 
 <body>
+    <?php require 'components/_navbar.php'; ?>
+    <?php
+    if ($showAlert) {
+        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Student details is <strong>Successfully</strong> save into the list
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>';
+    }
+
+    ?>
+    <?php
+    if ($showError) {
+        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>' . $showError . '</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+    }
+    ?>
     <div class="container form-container mt-5">
         <h2 class="text-center">Student Entry Form</h2>
         <form class="row g-2" action="form1.php" method="POST">
@@ -123,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </select>
             </div>
 
-            <div class="col-md-6">
+            <div>
                 <label for="subject_stream" class="form-label">Subject Stream</label>
                 <select name="subject_stream" class="form-select" id="subject_stream">
                     <option value="PCM">PCM</option>
@@ -132,9 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <option value="Arts">Arts</option>
                 </select>
             </div>
-
             <!-- Selection or Manual Entry Switch -->
-            <div class="col-md-6 d-flex">
+            <div class=" mt-3 mb-2 d-flex">
                 <div class="form-check">
                     <input type="radio" class="form-check-input" name="entry_mode" id="select_mode" value="select" checked>
                     <label class="form-check-label" for="select_mode">Select from dropdown</label>
@@ -146,8 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <!-- State Selection -->
-            <div class="col-md-6">
-                <label for="state" class="form-label">State</label>
+            <div class="col-md-6 mb-3">
                 <select class="form-control" id="state" name="state" required>
                     <option value="">Select State</option>
                     <option value="State 1">State 1</option>
@@ -160,7 +173,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <!-- City Selection -->
             <div class="col-md-6">
-                <label for="city" class="form-label">City</label>
                 <select class="form-control" id="city" name="city" required>
                     <option value="">Select City</option>
                     <option value="City 1">City 1</option>
@@ -173,7 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <!-- School Selection -->
             <div class="mb-3">
-                <label for="school" class="form-label">School</label>
                 <select class="form-control" id="school" name="school" required>
                     <option value="">Select School</option>
                     <option value="School 1">School 1</option>
