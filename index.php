@@ -1,37 +1,72 @@
 <?php
+// $login = false;
+// $showError = false;
+// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+//     include 'components/_dbconnect.php';
+//     $username = $_POST['username'];
+//     $password = $_POST['password'];
+//     $sql = "SELECT * FROM users WHERE userid='$username' AND password='$password'";
+//     $result = mysqli_query($conn, $sql);
+//     $num = mysqli_num_rows($result);
+//     if ($num == 1) {
+//         $row = mysqli_fetch_array($result);
+//         if ($row['userid'] == 'admin') {
+//             $login = true;
+//             session_start();
+//             $_SESSION['loggedin'] = true;
+//             $_SESSION['username'] = $username;
+//             header("location: admin.php");
+//         } else {
+
+//             $login = true;
+//             session_start();
+//             $_SESSION['loggedin'] = true;
+//             $_SESSION['username'] = $username;
+//             header('location: enteryForm.php');
+//         }
+//     } else {
+//         session_start();
+//         $_SESSION['message'] = 'This message will disappear in 5 seconds!';
+//         $_SESSION['message_type'] = 'success';  // 'success', 'danger', etc.
+//         $showError = "Invalid Credentials";
+//     }
+// }
+
 $login = false;
 $showError = false;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     include 'components/_dbconnect.php';
     $username = $_POST['username'];
     $password = $_POST['password'];
+
     $sql = "SELECT * FROM users WHERE userid='$username' AND password='$password'";
     $result = mysqli_query($conn, $sql);
     $num = mysqli_num_rows($result);
+
     if ($num == 1) {
         $row = mysqli_fetch_array($result);
-        if ($row['userid'] == 'admin') {
-            $login = true;
-            session_start();
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $username;
+        $login = true;
+        session_start();
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $username;
+
+        // Set user role
+        $_SESSION['role'] = ($row['userid'] == 'admin') ? 'admin' : $username;
+
+        // Redirect based on role
+        if ($_SESSION['role'] == 'admin') {
             header("location: admin.php");
         } else {
-
-            $login = true;
-            session_start();
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $username;
-            header('location: enteryForm.php');
+            header('location: dataform.php');
         }
     } else {
-        session_start();
-        $_SESSION['message'] = 'This message will disappear in 5 seconds!';
-        $_SESSION['message_type'] = 'success';  // 'success', 'danger', etc.
         $showError = "Invalid Credentials";
     }
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

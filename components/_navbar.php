@@ -1,7 +1,7 @@
 <?php
 $loggedin=false;
 if(!isset($_SESSION['loggedin']) && !$_SESSION['loggedin']==true){
-    header("location: login.php");
+    header("location: index.php");
 }
 
 echo '<nav class="navbar navbar-expand-lg navbar-light bg-light">

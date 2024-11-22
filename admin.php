@@ -1,7 +1,20 @@
 <?php
+
+// session_start();
+// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true || $_SESSION['role'] != 'admin') {
+//     header("location: enteryForm.php"); // Redirect non-admin users to the user page
+//     exit;
+// }
+
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
-    header("location: index.php");
+    header("location: index.php"); // Redirect if not logged in
+    exit;
+}
+
+// Allow only admins on this page
+if ($_SESSION['role'] != 'admin') {
+    header("location: dataform.php"); // Redirect normal users to the user page
     exit;
 }
 ?>
@@ -44,10 +57,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
                             <th>Cantact 2</th>
                             <th>Category</th>
                             <th>Subject Stream</th>
-                            <th>School Name</th>
+                            <th>State</th>
                             <th>City</th>
-                            <th>Tehsil</th>
-                            <th>Village</th>
+                            <th>School</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,16 +79,16 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $index++ . "</td>"; // Display index number
+                                echo "<td>" . $row['entery_type'] . "</td>";
                                 echo "<td>" . $row['sname'] . "</td>";
                                 echo "<td>" . $row['fname'] . "</td>";
                                 echo "<td>" . $row['contact1'] . "</td>";
                                 echo "<td>" . $row['contact2'] . "</td>";
                                 echo "<td>" . $row['ccategory'] . "</td>";
                                 echo "<td>" . $row['subject_stream'] . "</td>";
-                                echo "<td>" . $row['school_name'] . "</td>";
+                                echo "<td>" . $row['state'] . "</td>";
                                 echo "<td>" . $row['city'] . "</td>";
-                                echo "<td>" . $row['tehsil'] . "</td>";
-                                echo "<td>" . $row['Village'] . "</td>";
+                                echo "<td>" . $row['school_name'] . "</td>";
                                 echo "</tr>";
                             }
                         } else {

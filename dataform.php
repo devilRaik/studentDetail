@@ -1,9 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
-    header("location: index.php");
+    header("location: index.php"); // Redirect if not logged in
     exit;
 }
+
 $showAlert = false;
 $showError = false;
 include 'components/_dbconnect.php';
@@ -15,31 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mob2 = $_POST['contact2'];
     $ccat = $_POST['ccategory'];
     $substr = $_POST['subject_stream'];
-    $state = $_POST['state'];
-    $city = $_POST['city'];
-    $schoolname = $_POST['school_name'];
-    $entry_mode = $_POST['entry_mode'];
-
     // State
-    if ($entry_mode == 'select') {
-        $state = $_POST['state'];
-    } else {
-        $state = $_POST['manual_state'];
-    }
-
+    $state = ($_POST['entry_mode'] == 'select') ? $_POST['state'] : $_POST['manual_state'];
     // City
-    if ($entry_mode == 'select') {
-        $city = $_POST['city'];
-    } else {
-        $city = $_POST['manual_city'];
-    }
-
+    $city = ($_POST['entry_mode'] == 'select') ? $_POST['city'] : $_POST['manual_city'];
     // School
-    if ($entry_mode == 'select') {
-        $schoolname = $_POST['school'];
-    } else {
-        $schoolname = $_POST['manual_school'];
-    }
+    $schoolname = ($_POST['entry_mode'] == 'select') ? $_POST['school'] : $_POST['manual_school'];
+    $entry_mode = $_POST['entry_mode'];
 
     $existfield = "SELECT * FROM enquiry WHERE sname = '$sname' AND contact1 = '$mob1' AND contact2='$mob2'";
     $result = mysqli_query($conn, $existfield);
@@ -68,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Entry Form</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -92,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ?>
     <div class="container form-container mt-5">
         <h2 class="text-center">Student Entry Form</h2>
-        <form class="row g-2" action="form1.php" method="POST">
+        <form class="row g-2" action="dataform.php" method="POST">
             <div>
                 <label for="entery_type" class="form-label">Select Form Type</label>
                 <select name="entery_type" class="form-select" id="entery_type">
@@ -159,43 +142,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
 
-            <!-- State Selection -->
             <div class="col-md-6 mb-3">
-                <select class="form-control" id="state" name="state" required>
+                <!-- State Selection -->
+                <select class="form-control" id="state" name="state">
                     <option value="">Select State</option>
                     <option value="State 1">State 1</option>
                     <option value="State 2">State 2</option>
-                    <!-- Add other states here -->
                 </select>
-                <!-- Manual Entry -->
                 <input type="text" class="form-control" id="manual_state" name="manual_state" placeholder="Or enter state manually" style="display:none;">
             </div>
 
-            <!-- City Selection -->
             <div class="col-md-6">
-                <select class="form-control" id="city" name="city" required>
+                <!-- City Selection -->
+                <select class="form-control" id="city" name="city">
                     <option value="">Select City</option>
                     <option value="City 1">City 1</option>
                     <option value="City 2">City 2</option>
-                    <!-- Add other cities here -->
                 </select>
-                <!-- Manual Entry -->
                 <input type="text" class="form-control" id="manual_city" name="manual_city" placeholder="Or enter city manually" style="display:none;">
             </div>
 
-            <!-- School Selection -->
             <div class="mb-3">
-                <select class="form-control" id="school" name="school" required>
+                <!-- School Selection -->
+                <select class="form-control" id="school" name="school">
                     <option value="">Select School</option>
                     <option value="School 1">School 1</option>
                     <option value="School 2">School 2</option>
-                    <!-- Add other schools here -->
                 </select>
-                <!-- Manual Entry -->
                 <input type="text" class="form-control" id="manual_school" name="manual_school" placeholder="Or enter school manually" style="display:none;">
             </div>
-
-
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
@@ -203,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
 
     <!-- Custom Script to toggle fields based on radio button -->
     <script>
@@ -215,14 +190,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
 
         function toggleFields(isSelectMode) {
-            document.getElementById('state').style.display = isSelectMode ? 'block' : 'none';
-            document.getElementById('manual_state').style.display = isSelectMode ? 'none' : 'block';
+            // State
+            const stateSelect = document.getElementById('state');
+            const stateManual = document.getElementById('manual_state');
+            stateSelect.style.display = isSelectMode ? 'block' : 'none';
+            stateManual.style.display = isSelectMode ? 'none' : 'block';
+            stateSelect.required = isSelectMode;
+            stateManual.required = !isSelectMode;
 
-            document.getElementById('city').style.display = isSelectMode ? 'block' : 'none';
-            document.getElementById('manual_city').style.display = isSelectMode ? 'none' : 'block';
+            // City
+            const citySelect = document.getElementById('city');
+            const cityManual = document.getElementById('manual_city');
+            citySelect.style.display = isSelectMode ? 'block' : 'none';
+            cityManual.style.display = isSelectMode ? 'none' : 'block';
+            citySelect.required = isSelectMode;
+            cityManual.required = !isSelectMode;
 
-            document.getElementById('school').style.display = isSelectMode ? 'block' : 'none';
-            document.getElementById('manual_school').style.display = isSelectMode ? 'none' : 'block';
+            // School
+            const schoolSelect = document.getElementById('school');
+            const schoolManual = document.getElementById('manual_school');
+            schoolSelect.style.display = isSelectMode ? 'block' : 'none';
+            schoolManual.style.display = isSelectMode ? 'none' : 'block';
+            schoolSelect.required = isSelectMode;
+            schoolManual.required = !isSelectMode;
         }
 
         // Initial state setup
