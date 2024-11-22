@@ -1,11 +1,5 @@
 <?php
 
-// session_start();
-// if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true || $_SESSION['role'] != 'admin') {
-//     header("location: enteryForm.php"); // Redirect non-admin users to the user page
-//     exit;
-// }
-
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
     header("location: index.php"); // Redirect if not logged in
@@ -66,7 +60,7 @@ if ($_SESSION['role'] != 'admin') {
                         <?php
                         // Example PHP code to fetch data (use your database here)
                         // Database connection
-                        include 'components/_dbconnect.php';
+                        include '_dbconnect.php';
 
                         // Query to fetch data
                         // $sql = "SELECT * FROM `enquiry` WHERE entery_type=$etype, sname='$sname', fname='$fname', contact1='$mob1', contact2='$mob2', ccategory='$ccat', subject_stream='$substr', school_name='$schoolname', city='$city', tehsil='$tehsil', Village='$village'";

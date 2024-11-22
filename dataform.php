@@ -7,7 +7,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
 
 $showAlert = false;
 $showError = false;
-include 'components/_dbconnect.php';
+include '_dbconnect.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $etype = $_POST['entery_type'];
     $sname = $_POST['sname'];
@@ -57,21 +57,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <?php require 'components/_navbar.php'; ?>
     <?php
-    if ($showAlert) {
-        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                        Student details is <strong>Successfully</strong> save into the list
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
-    }
-
-    ?>
+    include 'components/_alert-success.php';
+    // if ($showAlert) {
+        //     echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+        //                     Student details is <strong>Successfully</strong> save into the list
+        //                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        //               </div>';
+        // }
+        
+        ?>
     <?php
-    if ($showError) {
-        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>' . $showError . '</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>';
-    }
+    include 'components/_alert-error.php';
+    // if ($showError) {
+    //     echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    //                     <strong>' . $showError . '</strong>
+    //                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    //         </div>';
+    // }
     ?>
     <div class="container form-container mt-5">
         <h2 class="text-center">Student Entry Form</h2>

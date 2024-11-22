@@ -36,7 +36,7 @@ $login = false;
 $showError = false;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    include 'components/_dbconnect.php';
+    include '_dbconnect.php';
     $username = $_POST['username'];
     $password = $_POST['password'];
 
